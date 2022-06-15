@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\API\ContactController;
+use App\Http\Controllers\API\PostContoller;
+use App\Http\Controllers\API\SubscribeContoller;
+use App\Http\Controllers\API\WebsiteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,5 +21,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/subscribe/{website}', [SubscribeContoller::class, 'subscribe']);
 
-Route::post('/contact', [ContactController::class, 'store'] )->name("api.contact.create");
+Route::get('/subscribers', [SubscribeContoller::class, 'all']);
+Route::get('/posts/queue', [SubscribeContoller::class, 'queue']);
+
+Route::resource('/websites', WebsiteController::class );
+Route::resource('/posts', PostContoller::class);
