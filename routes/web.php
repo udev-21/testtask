@@ -1,6 +1,9 @@
 <?php
 
+use App\Mail\SendPost;
+use App\Models\Post;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -24,9 +27,16 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/contact', function (){
-    return Inertia::render("Contact");
-})->name("contact");
+Route::get('/test', function () {
+    $post = Post::where("id", 1)->firstOrFail();
+    // dd($post);
+    // return view("post", [
+    //     'title'=>$post->title,
+    //     'author'=>$post->author,
+    //     'content'=>$post->content,
+    // ]);
+    Mail::to('udev21@gmail.com')->send(new SendPost($post));
+});
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

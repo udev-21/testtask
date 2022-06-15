@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendPost;
 use App\Models\Post;
 use App\Models\PostSubscriber;
+use App\Models\Subscriber;
 use App\Models\Website;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class PostContoller extends Controller
 {
@@ -46,7 +50,11 @@ class PostContoller extends Controller
             return response()->json(['error'=>"Internal error: something went wrong, try again please"], 500);
         }
         
-        DB::insert("INSERT INTO post_subscribers (post_id, email) SELECT \"{$newPost->id}\" as post_id, email FROM subscribers WHERE website_id = \"{$validated_data['website_id']}\"");
+        $subs = Subscriber::where("website_id", $validated_data['website_id'])->get();
+
+        foreach($subs as $s) {
+            Mail::to($s->email)->queue((new SendPost($newPost)));
+        }
 
         return response()->json($newPost);
     }
