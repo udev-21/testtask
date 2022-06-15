@@ -16,6 +16,44 @@ class SubscribeContoller extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+
+    /**
+    * @OA\Post(
+    *     path="/api/subscribe/{website_id}",
+    *     summary="Create new Website",
+    *     @OA\Parameter(
+    *         description="website id",
+    *         in="path",
+    *         name="website_id",
+    *         required=true,
+    *         @OA\Schema(type="integer"),
+    *         @OA\Examples(example="int", value="1", summary="An int value."),
+    *     ),
+    *     @OA\RequestBody(
+    *         @OA\MediaType(
+    *             mediaType="application/json",
+    *             @OA\Schema(
+    *                 @OA\Property(
+    *                     property="email",
+    *                     type="string"
+    *                 ),
+    *                 example={"email": "test@gmail.com"}
+    *             )
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="OK",
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Website doesn't exists",
+    *         @OA\JsonContent(
+    *             @OA\Examples(example="result", value={"error": "website exists"}, summary="Validation error."),
+    *         )
+    *     ),
+    * )
+    */
     public function subscribe(Request $request, Website $website)
     {
         $validated_data = $this->getValidated($request);

@@ -13,13 +13,57 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * @OA\Info(
+ *    title="Posts",
+ *    version="1.0.0",
+ * )
+ * 
+*/
+
+
 class PostContoller extends Controller
-{
+{ 
+ 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\JsonResponse
      */
+    
+    /**
+    * @OA\Get(
+    *     path="/api/posts",
+    *     summary="List of Posts",
+    *     @OA\Response(
+    *         response=200,
+    *         description="OK",
+    
+    *         @OA\MediaType(
+    *             mediaType="application/json",
+    *             @OA\Schema(
+    *                 @OA\Property(
+    *                     property="website_id",
+    *                     type="integer"
+    *                 ),
+    *                 @OA\Property(
+    *                     property="title",
+    *                     type="string"
+    *                 ),
+    *                 @OA\Property(
+    *                     property="author",
+    *                     type="string"
+    *                 ),
+    *                 @OA\Property(
+    *                     property="content",
+    *                     type="string"
+    *                 ),
+    *                 example={"title": "This is title for post #1", "content": "Post content #1", "author": "John Doe", "website_id": 1}
+    *             )
+    *         )
+    *     ),
+    * )
+    */
     public function index()
     {
         //TODO: pagination
@@ -32,6 +76,58 @@ class PostContoller extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
+
+    /**
+    * @OA\Post(
+    *     path="/api/posts",
+    *     summary="Create new Post",
+    *     @OA\RequestBody(
+    *         @OA\MediaType(
+    *             mediaType="application/json",
+    *             @OA\Schema(
+    *                 @OA\Property(
+    *                     property="website_id",
+    *                     type="integer"
+    *                 ),
+    *                 @OA\Property(
+    *                     property="title",
+    *                     type="string"
+    *                 ),
+    *                 @OA\Property(
+    *                     property="author",
+    *                     type="string"
+    *                 ),
+    *                 @OA\Property(
+    *                     property="content",
+    *                     type="string"
+    *                 ),
+    *                 example={"title": "This is title for post #1", "content": "Post content #1", "author": "John Doe", "website_id": 1}
+    *             )
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="OK",
+    *         @OA\JsonContent(
+    *             @OA\Examples(example="result", value={"id": 1, "title": "This is title for post #1", "content": "Post content #1", "author": "John Doe", "website_id": 1}, summary="An result object."),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Invalid input",
+    *         @OA\JsonContent(
+    *             @OA\Examples(example="result", value={"error": "Invalid input: website doesn't exists"}, summary="Validation error."),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=500,
+    *         description="Internal error",
+    *         @OA\JsonContent(
+    *             @OA\Examples(example="result", value={"error": "Internal error: something went wrong, try again please"}, summary="Server error."),
+    *         )
+    *     ),
+    * )
+    */
     public function store(Request $request)
     {
         $validated_data = $this->getValidated($request);
@@ -65,6 +161,32 @@ class PostContoller extends Controller
      * @param  Post  $post
      * @return \Illuminate\Http\JsonResponse
      */
+
+    /**
+    * @OA\Get(
+    *     path="/api/posts/{id}",
+    *     summary="Get single post",
+    *     @OA\Parameter(
+    *         description="post id",
+    *         in="path",
+    *         name="id",
+    *         required=true,
+    *         @OA\Schema(type="integer"),
+    *         @OA\Examples(example="int", value="1", summary="An int value."),
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="OK",
+    *         @OA\JsonContent(
+    *             @OA\Examples(example="result", value={"id": 1, "title": "This is title for post #1", "content": "Post content #1", "author": "John Doe", "website_id": 1}, summary="An result object."),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Not found",
+    *     ),
+    * )
+    */
     public function show(Post $post)
     {
         return response()->json($post);
@@ -89,6 +211,36 @@ class PostContoller extends Controller
      * @param  Post  $post
      * @return \Illuminate\Http\JsonResponse
      */
+
+    /**
+    * @OA\Delete(
+    *     path="/api/posts/{id}",
+    *     summary="Delete single post",
+    *     @OA\Parameter(
+    *         description="post id",
+    *         in="path",
+    *         name="id",
+    *         required=true,
+    *         @OA\Schema(type="integer"),
+    *         @OA\Examples(example="int", value="1", summary="An int value."),
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="OK",
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Not found",
+    *     ),
+    *     @OA\Response(
+    *         response=500,
+    *         description="Internal error",
+    *         @OA\JsonContent(
+    *             @OA\Examples(example="result", value={"error": "Internal error: something went wrong, try again please"}, summary="Server error."),
+    *         )
+    *     ),
+    * )
+    */
     public function destroy(Post $post)
     {
         try{
