@@ -8,4 +8,4 @@ composer install
 php artisan key:generate
 php artisan migrate
 ```
-goto -> [here](http://localhost:80)
+goto -> [here](http://localhost:80/api/documentation)
